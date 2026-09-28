@@ -1,16 +1,9 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
+import { getUsers } from '@/lib/users'
 
-type LocalUser = { id: string; name: string; email: string; passwordHash: string; accessLevel?: 'free' | 'paid'; isAdmin?: boolean }
-
-function getUsers(): LocalUser[] {
-  try {
-    return JSON.parse(process.env.AUTH_USERS_JSON ?? '[]') as LocalUser[]
-  } catch {
-    return []
-  }
-}
+type LocalUser = ReturnType<typeof getUsers>[number]
 
 export const authOptions: NextAuthOptions = {
   providers: [

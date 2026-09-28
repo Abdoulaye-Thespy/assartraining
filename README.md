@@ -40,7 +40,9 @@ pnpm install
 pnpm dev
 ```
 
-Puis ouvrez `http://localhost:3000/login`.
+Puis ouvrez `http://localhost:3000/login` ou `/signup` pour créer un compte apprenant. L’admin configuré avec `isAdmin: true` peut ouvrir `/admin` et modifier les accès `free`/`paid`.
+
+Note : ce démarrage Credentials conserve les nouveaux comptes en mémoire du processus pour la prévisualisation. Pour la production, remplacez `lib/users.ts` par une base de données afin de conserver les inscriptions et changements d’accès après redémarrage ou déploiement serverless.
 
 ## Auth0
 
