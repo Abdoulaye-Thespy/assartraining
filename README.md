@@ -1,6 +1,6 @@
 # ASSAR Training
 
-Plateforme de formations vidéo ASSAR avec NextAuth.js (Auth.js) et Auth0 comme fournisseur d’identité.
+Plateforme de formations vidéo ASSAR avec NextAuth.js avec le Credentials Provider pour le démarrage local.
 
 ## Installation locale rapide
 
@@ -15,23 +15,36 @@ npm run dev
 
 Ouvrir `http://localhost:3000`.
 
-## Variables locales NextAuth.js + Auth0
+## Variables locales NextAuth.js Credentials
 
-Copier `.env.example` vers `.env.local`, puis renseigner :
+Copier `.env.example` vers `.env.local`, générer un hash bcrypt, puis renseigner :
+
+```bash
+openssl rand -hex 32
+node -e "const bcrypt=require('bcryptjs'); bcrypt.hash('ChangeMe123!', 10).then(console.log)"
+```
 
 ```env
 NEXTAUTH_SECRET=une-valeur-secrete-longue-et-aleatoire
 NEXTAUTH_URL=http://localhost:3000
 APP_BASE_URL=http://localhost:3000
-AUTH0_DOMAIN=votre-tenant.eu.auth0.com
-AUTH0_CLIENT_ID=votre-client-id
-AUTH0_CLIENT_SECRET=votre-client-secret
-NEXT_PUBLIC_ADMIN_EMAIL=admin@example.com
+AUTH_USERS_JSON='[{"id":"admin-1","name":"Admin ASSAR","email":"admin@assar.org","passwordHash":"COLLER_LE_HASH_BCRYPT","accessLevel":"paid","isAdmin":true}]'
 ```
 
-Générer le secret avec `openssl rand -hex 32`. Ne jamais committer `.env.local`.
+Ajoutez d’autres apprenants dans le tableau JSON avec `accessLevel` à `free` ou `paid`. Ne jamais committer `.env.local`.
 
-## Configuration Auth0 pour NextAuth.js
+## Démarrage
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Puis ouvrez `http://localhost:3000/login`.
+
+## Auth0
+
+Auth0 n’est pas utilisé par le flux Credentials actuel. Il pourra être réactivé ensuite comme provider OAuth sans changer l’interface.
 
 1. Auth0 Dashboard → Applications → Create Application → **Regular Web Application**.
 2. Dans Settings, ajouter :
