@@ -9,10 +9,10 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "^4.30.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.468.0",
     "next": "latest",
+    "next-auth": "^4.24.15",
     "react": "latest",
     "react-dom": "latest",
     "tailwind-merge": "^2.5.5"

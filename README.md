@@ -1,6 +1,6 @@
 # ASSAR Training
 
-Plateforme de formations vidéo ASSAR avec authentification Auth0.
+Plateforme de formations vidéo ASSAR avec NextAuth.js (Auth.js) et Auth0 comme fournisseur d’identité.
 
 ## Installation locale rapide
 
@@ -15,12 +15,13 @@ npm run dev
 
 Ouvrir `http://localhost:3000`.
 
-## Variables Auth0
+## Variables locales NextAuth.js + Auth0
 
-Renseigner `.env.local` :
+Copier `.env.example` vers `.env.local`, puis renseigner :
 
 ```env
-AUTH0_SECRET=une-valeur-secrete-longue-et-aleatoire
+NEXTAUTH_SECRET=une-valeur-secrete-longue-et-aleatoire
+NEXTAUTH_URL=http://localhost:3000
 APP_BASE_URL=http://localhost:3000
 AUTH0_DOMAIN=votre-tenant.eu.auth0.com
 AUTH0_CLIENT_ID=votre-client-id
@@ -28,13 +29,13 @@ AUTH0_CLIENT_SECRET=votre-client-secret
 NEXT_PUBLIC_ADMIN_EMAIL=admin@example.com
 ```
 
-`AUTH0_SECRET` peut être généré avec `openssl rand -hex 32`. Ne jamais committer `.env.local`.
+Générer le secret avec `openssl rand -hex 32`. Ne jamais committer `.env.local`.
 
-## Configuration Auth0
+## Configuration Auth0 pour NextAuth.js
 
 1. Auth0 Dashboard → Applications → Create Application → **Regular Web Application**.
 2. Dans Settings, ajouter :
-   - Allowed Callback URLs: `http://localhost:3000/auth/callback`
+   - Allowed Callback URLs: `http://localhost:3000/api/auth/callback/auth0`
    - Allowed Logout URLs: `http://localhost:3000`
    - Allowed Web Origins: `http://localhost:3000`
 3. Copier Domain, Client ID et Client Secret dans `.env.local`.

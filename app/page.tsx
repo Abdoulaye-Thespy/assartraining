@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useUser } from '@auth0/nextjs-auth0/client'
+import { signIn, signOut, useSession } from 'next-auth/react'
 import { ArrowRight, BookOpen, CheckCircle2, ChevronDown, Clock3, Edit3, Eye, LayoutDashboard, LockKeyhole, LogIn, Menu, PlayCircle, Plus, Search, ShieldCheck, Sparkles, Users, X } from 'lucide-react'
 
 const courses = [
@@ -14,9 +14,11 @@ const courses = [
 ]
 
 export default function Home() {
-  const { user, isLoading } = useUser()
-  const accessLevel = (user?.['https://assar.org/access_level'] as string | undefined) ?? 'free'
-  const isAdmin = user?.['https://assar.org/roles']?.includes?.('admin') || user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL
+  const { data: session, status } = useSession()
+  const user = session?.user
+  const isLoading = status === 'loading'
+  const accessLevel = user?.accessLevel ?? 'free'
+  const isAdmin = Boolean(user?.isAdmin)
   const [view, setView] = useState<'catalog' | 'admin'>('catalog')
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState<typeof courses[number] | null>(null)
@@ -24,7 +26,7 @@ export default function Home() {
   const filtered = courses.filter((course) => `${course.title} ${course.category}`.toLowerCase().includes(query.toLowerCase()))
   const openCourse = (course: typeof courses[number]) => {
     if (!user) {
-      window.location.href = `/auth/login?returnTo=${encodeURIComponent('/')}`
+      void signIn('auth0', { callbackUrl: '/' })
       return
     }
     if (!course.free && accessLevel !== 'paid') {
@@ -42,7 +44,7 @@ export default function Home() {
           <div className="hidden sm:block text-left"><p className="font-serif text-lg font-bold tracking-tight text-[#005b46]">ASSAR</p><p className="text-[10px] font-semibold uppercase tracking-[.18em] text-[#6d877e]">IA créative</p></div>
         </button>
         <nav className="hidden items-center gap-7 md:flex"><button onClick={() => setView('catalog')} className={`text-sm font-semibold ${view === 'catalog' ? 'text-[#006a4e]' : 'text-[#61776f] hover:text-[#006a4e]'}`}>Formations</button><a href="#about" className="text-sm font-semibold text-[#61776f] hover:text-[#006a4e]">À propos</a><a href="#contact" className="text-sm font-semibold text-[#61776f] hover:text-[#006a4e]">Contact</a></nav>
-        <div className="flex items-center gap-2">{isAdmin && <button onClick={() => setView('admin')} className="hidden rounded-full px-4 py-2 text-sm font-semibold text-[#006a4e] hover:bg-[#e7f2ed] sm:block">Espace admin</button>}{user ? <a href="/auth/logout" className="flex items-center gap-2 rounded-full border border-[#cfe2d8] bg-white px-4 py-2.5 text-sm font-bold text-[#006a4e]">{isLoading ? 'Chargement...' : 'Se déconnecter'}</a> : <a href="/auth/login" className="flex items-center gap-2 rounded-full bg-[#006a4e] px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[#00563f]"><LogIn data-icon="inline-start" /> Se connecter</a>}<button className="rounded-lg p-2 md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">{menuOpen ? <X /> : <Menu />}</button></div>
+        <div className="flex items-center gap-2">{isAdmin && <button onClick={() => setView('admin')} className="hidden rounded-full px-4 py-2 text-sm font-semibold text-[#006a4e] hover:bg-[#e7f2ed] sm:block">Espace admin</button>}{user ? <button onClick={() => void signOut({ callbackUrl: '/' })} className="flex items-center gap-2 rounded-full border border-[#cfe2d8] bg-white px-4 py-2.5 text-sm font-bold text-[#006a4e]">{isLoading ? 'Chargement...' : 'Se déconnecter'}</button> : <button onClick={() => void signIn('auth0', { callbackUrl: '/' })} className="flex items-center gap-2 rounded-full bg-[#006a4e] px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[#00563f]"><LogIn data-icon="inline-start" /> Se connecter</button>}<button className="rounded-lg p-2 md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">{menuOpen ? <X /> : <Menu />}</button></div>
       </div>
       {menuOpen && <div className="border-t border-[#dcebe4] px-5 py-4 md:hidden"><div className="flex flex-col gap-4 text-sm font-semibold"><button className="text-left" onClick={() => { setView('catalog'); setMenuOpen(false) }}>Formations</button><a href="#about" onClick={() => setMenuOpen(false)}>À propos</a><button className="text-left text-[#006a4e]" onClick={() => { setView('admin'); setMenuOpen(false) }}>Espace admin</button></div></div>}
     </header>
