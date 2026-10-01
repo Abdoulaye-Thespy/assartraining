@@ -14,14 +14,17 @@
     "lucide-react": "^0.468.0",
     "next": "latest",
     "next-auth": "^4.24.15",
+    "pg": "^8.23.1",
     "react": "latest",
     "react-dom": "latest",
+    "resend": "^6.31.0",
     "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "latest",
     "@types/bcryptjs": "^3.0.0",
     "@types/node": "latest",
+    "@types/pg": "^8.23.1",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "postcss": "latest",

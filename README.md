@@ -42,7 +42,9 @@ pnpm dev
 
 Puis ouvrez `http://localhost:3000/login` ou `/signup` pour créer un compte apprenant. L’admin configuré avec `isAdmin: true` peut ouvrir `/admin` et modifier les accès `free`/`paid`.
 
-Note : ce démarrage Credentials conserve les nouveaux comptes en mémoire du processus pour la prévisualisation. Pour la production, remplacez `lib/users.ts` par une base de données afin de conserver les inscriptions et changements d’accès après redémarrage ou déploiement serverless.
+Les comptes sont maintenant persistés dans Neon. Ajoutez `DATABASE_URL`, `RESEND_API_KEY` et `RESEND_FROM_EMAIL` dans `.env.local`. Le lien de vérification expire après 30 minutes et un compte non vérifié ne peut pas se connecter.
+
+Pour activer l’envoi réel, utilisez une adresse `RESEND_FROM_EMAIL` sur un domaine vérifié (ou `ASSAR <onboarding@resend.dev>` pour les tests autorisés par Resend).
 
 ## Auth0
 

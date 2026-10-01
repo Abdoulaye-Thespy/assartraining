@@ -1,9 +1,9 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
-import { getUsers } from '@/lib/users'
+import { findUserByEmail } from '@/lib/users'
 
-type LocalUser = ReturnType<typeof getUsers>[number]
+type LocalUser = Awaited<ReturnType<typeof findUserByEmail>>
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -12,8 +12,8 @@ export const authOptions: NextAuthOptions = {
       credentials: { email: { label: 'Email', type: 'email' }, password: { label: 'Mot de passe', type: 'password' } },
       async authorize(credentials) {
         if (!credentials?.email || !credentials.password) return null
-        const user = getUsers().find((candidate) => candidate.email.toLowerCase() === credentials.email.toLowerCase())
-        if (!user || !(await bcrypt.compare(credentials.password, user.passwordHash))) return null
+        const user = await findUserByEmail(credentials.email)
+        if (!user || !user.emailVerifiedAt || !(await bcrypt.compare(credentials.password, user.passwordHash))) return null
         return { id: user.id, name: user.name, email: user.email, accessLevel: user.accessLevel ?? 'free', isAdmin: Boolean(user.isAdmin) }
       },
     }),
