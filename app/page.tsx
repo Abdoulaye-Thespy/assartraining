@@ -187,12 +187,7 @@ export default function Home() {
               </a>
             )}
             {user ? (
-              <button
-                onClick={() => void signOut({ callbackUrl: "/" })}
-                className="flex items-center gap-2 rounded-full border border-[#cfe2d8] bg-white px-4 py-2.5 text-sm font-bold text-[#006a4e]"
-              >
-                {isLoading ? "Chargement..." : "Se déconnecter"}
-              </button>
+              <div className="flex items-center gap-2 rounded-full border border-[#cfe2d8] bg-white pl-1.5 pr-2 py-1.5"><div className="flex size-8 items-center justify-center overflow-hidden rounded-full bg-[#d9eee2] text-xs font-black text-[#006a4e]" aria-label="Photo de profil">{user.image ? <img src={user.image} alt="Photo de profil" className="size-full object-cover" /> : (user.name ?? user.email ?? "A").slice(0, 1).toUpperCase()}</div><span className="hidden max-w-24 truncate text-sm font-bold text-[#006a4e] sm:block">{user.name ?? user.email}</span><button onClick={() => void signOut({ callbackUrl: "/" })} className="rounded-full px-2 py-1 text-sm font-bold text-[#006a4e] hover:bg-[#e7f2ed]">{isLoading ? "..." : "Sortir"}</button></div>
             ) : (
               <button
                 onClick={() => void signIn("credentials", { callbackUrl: "/" })}
@@ -201,12 +196,7 @@ export default function Home() {
                 <LogIn data-icon="inline-start" /> Se connecter
               </button>
             )}
-            <a
-              href="/signup"
-              className="hidden rounded-full border border-[#b9d9ca] bg-white px-4 py-2.5 text-sm font-bold text-[#006a4e] hover:bg-[#e7f2ed] sm:inline-flex"
-            >
-              Créer un compte
-            </a>
+            {!user && <a href="/signup" className="hidden rounded-full border border-[#b9d9ca] bg-white px-4 py-2.5 text-sm font-bold text-[#006a4e] hover:bg-[#e7f2ed] sm:inline-flex">Créer un compte</a>}
             <button
               className="rounded-lg p-2 md:hidden"
               onClick={() => setMenuOpen(!menuOpen)}
@@ -231,6 +221,7 @@ export default function Home() {
               <a href="#about" onClick={() => setMenuOpen(false)}>
                 À propos
               </a>
+              {!user && <a href="/signup" onClick={() => setMenuOpen(false)} className="text-left text-[#006a4e]">Créer un compte</a>}
               <button
                 className="text-left text-[#006a4e]"
                 onClick={() => {
