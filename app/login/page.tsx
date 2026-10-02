@@ -14,8 +14,8 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
     const result = await signIn('credentials', { email, password, callbackUrl: '/', redirect: false })
-    if (result?.error) setError('Email ou mot de passe incorrect.')
-    else window.location.href = result?.url ?? '/'
+    if (!result?.ok || result.error) setError('Email ou mot de passe incorrect. Vérifiez aussi que votre adresse email est confirmée.')
+    else window.location.href = result.url ?? '/'
     setLoading(false)
   }
 
