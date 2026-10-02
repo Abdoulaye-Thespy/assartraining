@@ -4,8 +4,9 @@ import { createVerification } from '@/lib/email-verification'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Méthode non autorisée.' })
-  const { name, email, password } = req.body as { name?: string; email?: string; password?: string }
-  if (!name || !email || !password || password.length < 8) return res.status(400).json({ error: 'Nom, email et mot de passe de 8 caractères minimum requis.' })
+  const { name, email, password, confirmPassword } = req.body as { name?: string; email?: string; password?: string; confirmPassword?: string }
+  if (!name || !email || !password || !confirmPassword || password.length < 8) return res.status(400).json({ error: 'Nom, email et deux mots de passe de 8 caractères minimum requis.' })
+  if (password !== confirmPassword) return res.status(400).json({ error: 'Les deux mots de passe ne correspondent pas.' })
   try {
     const user = await createUser({ name, email, password })
     const verification = await createVerification(user.id, user.email, user.name)

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { LearnerDashboard } from "@/components/learner-dashboard";
 import { signIn, signOut, useSession } from "next-auth/react";
 import {
   ArrowRight,
@@ -238,6 +239,8 @@ export default function Home() {
 
       {view === "admin" ? (
         <AdminView onBack={() => setView("catalog")} />
+      ) : user ? (
+        <LearnerDashboard user={user} courses={courses} onOpenCourse={openCourse} />
       ) : (
         <>
           <section className="relative overflow-hidden bg-[#e8f4ef]">
